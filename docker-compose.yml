@@ -1,0 +1,33 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-task-management
+    environment:
+      MYSQL_DATABASE: task_management
+      MYSQL_ROOT_PASSWORD: 200456
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - task-network
+
+  app:
+    build: .
+    container_name: springboot-task-management
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/task_management
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 200456
+    ports:
+      - "8080:8080"
+    networks:
+      - task-network
+
+volumes:
+  mysql-data:
+
+networks:
+  task-network:
